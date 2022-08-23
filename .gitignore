@@ -6,3 +6,11 @@ my_calendar/macos/Flutter/GeneratedPluginRegistrant.swift
 my_calendar/windows/flutter/generated_plugin_registrant.cc
 my_calendar/windows/flutter/generated_plugin_registrant.h
 my_calendar/windows/flutter/generated_plugins.cmake
+my_calendar/linux/flutter/generated_plugin_registrant.cc
+my_calendar/linux/flutter/generated_plugin_registrant.cc
+my_calendar/linux/flutter/generated_plugin_registrant.h
+my_calendar/linux/flutter/generated_plugins.cmake
+my_calendar/macos/Flutter/GeneratedPluginRegistrant.swift
+my_calendar/windows/flutter/generated_plugin_registrant.cc
+my_calendar/windows/flutter/generated_plugin_registrant.h
+my_calendar/windows/flutter/generated_plugins.cmake
