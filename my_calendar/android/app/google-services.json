@@ -1,10 +1,47 @@
 {
   "project_info": {
     "project_number": "690014095278",
+    "firebase_url": "https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "my-calendar-fff18",
     "storage_bucket": "my-calendar-fff18.appspot.com"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690014095278:android:2a96ee223967b0a5e52a3f",
+        "android_client_info": {
+          "package_name": "com.example.flutter_firebase_calendar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690014095278-2nlc0bnhik0d0orljh8fujagpnin09m4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT0hhKfzACxqblu7fXVnZiJO1PkRb5aaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690014095278-2nlc0bnhik0d0orljh8fujagpnin09m4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "690014095278-g6ao544b2bb7jh44b0lqgq409hug6ho6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterFirebaseCalendar"
+              }
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:690014095278:android:ee975764ff606776e52a3f",
@@ -29,6 +66,13 @@
             {
               "client_id": "690014095278-2nlc0bnhik0d0orljh8fujagpnin09m4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "690014095278-g6ao544b2bb7jh44b0lqgq409hug6ho6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterFirebaseCalendar"
+              }
             }
           ]
         }
