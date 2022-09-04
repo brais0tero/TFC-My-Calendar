@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class User {
   final int id;
   final String pass;
@@ -16,4 +14,6 @@ class User {
         'name': name,
         'pass' : pass
       };
+       @override
+  String toString() => name;
 }
