@@ -39,7 +39,7 @@ class _SignInPageState extends State<SignInPage> {
           .then((result) async {
         if (result != null) {
           QuerySnapshot userInfoSnapshot =
-              await DatabaseService().getUserData(email);
+              await DatabaseService(uid: '').getUserData(email);
 
           await HelperFunctions.saveUserLoggedInSharedPreference(true);
           await HelperFunctions.saveUserEmailSharedPreference(email);

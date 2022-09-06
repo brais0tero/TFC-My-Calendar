@@ -4,7 +4,7 @@ class DatabaseService {
 
   final String uid;
   DatabaseService({
-    this.uid
+    required this.uid
   });
 
   // Collection reference
@@ -74,7 +74,7 @@ class DatabaseService {
         'groups': FieldValue.arrayUnion([groupId + '_' + groupName])
       });
 
-      await groupDocRef.updateData({
+      await groupDocRef.update({
         'members': FieldValue.arrayUnion([uid + '_' + userName])
       });
     }
@@ -84,7 +84,7 @@ class DatabaseService {
   // has user joined the group
   Future<bool> isUserJoined(String groupId, String groupName, String userName) async {
 
-    DocumentReference userDocRef = userCollection.document(uid);
+    DocumentReference userDocRef = userCollection.doc(uid);
     DocumentSnapshot userDocSnapshot = await userDocRef.get();
 
     List<dynamic> groups = await userDocSnapshot.data['groups'];
