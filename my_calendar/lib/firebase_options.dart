@@ -27,7 +27,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -46,8 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '690014095278',
     projectId: 'my-calendar-fff18',
     authDomain: 'my-calendar-fff18.firebaseapp.com',
-    databaseURL:
-        'https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL: 'https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'my-calendar-fff18.appspot.com',
     measurementId: 'G-RE9T5TYN90',
   );
@@ -57,8 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:690014095278:android:ee975764ff606776e52a3f',
     messagingSenderId: '690014095278',
     projectId: 'my-calendar-fff18',
-    databaseURL:
-        'https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL: 'https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'my-calendar-fff18.appspot.com',
   );
 
@@ -67,11 +68,9 @@ class DefaultFirebaseOptions {
     appId: '1:690014095278:ios:71500107d88850f3e52a3f',
     messagingSenderId: '690014095278',
     projectId: 'my-calendar-fff18',
-    databaseURL:
-        'https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL: 'https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'my-calendar-fff18.appspot.com',
-    iosClientId:
-        '690014095278-698deh4mipsre2v1vdvgqfs24s8iuti8.apps.googleusercontent.com',
+    iosClientId: '690014095278-698deh4mipsre2v1vdvgqfs24s8iuti8.apps.googleusercontent.com',
     iosBundleId: 'com.example.myCalendarTFC',
   );
 
@@ -80,18 +79,9 @@ class DefaultFirebaseOptions {
     appId: '1:690014095278:ios:9728610b220636d6e52a3f',
     messagingSenderId: '690014095278',
     projectId: 'my-calendar-fff18',
-    databaseURL:
-        'https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL: 'https://my-calendar-fff18-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'my-calendar-fff18.appspot.com',
-    iosClientId:
-        '690014095278-om901it947lllf8ksk15hntp7d7lg6g2.apps.googleusercontent.com',
+    iosClientId: '690014095278-om901it947lllf8ksk15hntp7d7lg6g2.apps.googleusercontent.com',
     iosBundleId: 'com.example.myCalendar',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAaimtYk4SPyKYpL2CbD6-r2kpnRUxLItA',
-    appId: '1:690014095278:ios:9728610b220636d6e52a3f',
-    messagingSenderId: '690014095278',
-    projectId: 'my-calendar-fff18',
   );
 }

@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
 
-                  Text("Create or Join Groups", style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold)),
+                  Text("Set events", style: TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold)),
                     
                   SizedBox(height: 30.0),
                     
@@ -129,10 +129,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(
                     width: double.infinity,
                     height: 50.0,
-                    child: RaisedButton(
-                      elevation: 0.0,
-                      color: Colors.blue,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                    child:  ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                             elevation: 0.0, shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0)),
+                          ),
                       child: Text('Register', style: TextStyle(color: Colors.white, fontSize: 16.0)),
                       onPressed: () {
                         _onRegister();

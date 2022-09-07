@@ -1,30 +1,56 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_calendar/views/auth/authenticate_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'utils/firebase_options.dart';
+import 'helper/helper_functions.dart';
+import 'firebase_options.dart';
 import 'utils/utils.dart';
 import 'views/home_view.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
-  @override 
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserLoggedInStatus();
+  }
+
+  _getUserLoggedInStatus() async {
+    await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
+      if (value != null) {
+        setState(() {
+          _isLoggedIn = false;
+        });
+      }
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-       debugShowCheckedModeBanner: false,
-      title: 'My Calendar',
-      theme: ThemeData.dark(),
-      home: const MyHomePage(title: 'Inicio'),
+      title: 'My calendar',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      home: _isLoggedIn ? const MyHomePage(title: 'Inicio')  : AuthenticatePage(),
+     
     );
   }
 }

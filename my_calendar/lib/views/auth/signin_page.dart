@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, prefer_const_constructors_in_immutables, unused_local_variable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
@@ -30,21 +30,24 @@ class _SignInPageState extends State<SignInPage> {
 
   _onSignIn() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      print(email);
+      print(password);
+      // setState(() {
+      //   _isLoading = false;
+      // });
 
       await _auth
           .signInWithEmailAndPassword(email, password)
           .then((result) async {
         if (result != null) {
+          print(result.uid);
           QuerySnapshot userInfoSnapshot =
-              await DatabaseService(uid: '').getUserData(email);
-
+              await DatabaseService(uid: result.uid).getUserData(email);
+          
           await HelperFunctions.saveUserLoggedInSharedPreference(true);
           await HelperFunctions.saveUserEmailSharedPreference(email);
-          await HelperFunctions.saveUserNameSharedPreference(
-              userInfoSnapshot.docs[0].data()['fullName']);
+          // await HelperFunctions.saveUserNameSharedPreference(
+          //     userInfoSnapshot.docs[0].data());
 
           print("Signed In");
           await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
@@ -53,12 +56,12 @@ class _SignInPageState extends State<SignInPage> {
           await HelperFunctions.getUserEmailSharedPreference().then((value) {
             print("Email: $value");
           });
-          await HelperFunctions.getUserNameSharedPreference().then((value) {
-            print("Full Name: $value");
-          });
+          // await HelperFunctions.getUserNameSharedPreference().then((value) {
+          //   print("Full Name: $value");
+          // });
 
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const MyHomePage(title: 'My calendar')));
+          // Navigator.of(context).pushReplacement(MaterialPageRoute(
+              // builder: (context) => const MyHomePage(title: 'My calendar')));
         } else {
           setState(() {
             error = 'Error signing in!';
@@ -85,9 +88,9 @@ class _SignInPageState extends State<SignInPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text("Create or Join Groups",
+                      Text("Set events",
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 40.0,
                               fontWeight: FontWeight.bold)),
                       SizedBox(height: 30.0),
@@ -131,12 +134,13 @@ class _SignInPageState extends State<SignInPage> {
                       SizedBox(
                         width: double.infinity,
                         height: 50.0,
-                        child: RaisedButton(
-                            elevation: 0.0,
-                            color: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
-                            child: Text('Sign In',
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0)),
+                            ),
+                            child: const Text('Sign In',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16.0)),
                             onPressed: () {
@@ -151,7 +155,7 @@ class _SignInPageState extends State<SignInPage> {
                           children: <TextSpan>[
                             TextSpan(
                               text: 'Register here',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.white,
                                   decoration: TextDecoration.underline),
                               recognizer: TapGestureRecognizer()

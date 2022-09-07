@@ -32,10 +32,10 @@
               "client_type": 3
             },
             {
-              "client_id": "690014095278-g6ao544b2bb7jh44b0lqgq409hug6ho6.apps.googleusercontent.com",
+              "client_id": "690014095278-698deh4mipsre2v1vdvgqfs24s8iuti8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.flutterFirebaseCalendar"
+                "bundle_id": "com.example.myCalendarTFC"
               }
             }
           ]
@@ -68,10 +68,10 @@
               "client_type": 3
             },
             {
-              "client_id": "690014095278-g6ao544b2bb7jh44b0lqgq409hug6ho6.apps.googleusercontent.com",
+              "client_id": "690014095278-698deh4mipsre2v1vdvgqfs24s8iuti8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.flutterFirebaseCalendar"
+                "bundle_id": "com.example.myCalendarTFC"
               }
             }
           ]

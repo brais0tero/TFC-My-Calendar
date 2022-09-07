@@ -4,6 +4,7 @@ import 'package:my_calendar/views/auth/signin_page.dart';
 
 class AuthenticatePage extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _AuthenticatePageState createState() => _AuthenticatePageState();
 }
 
