@@ -31,14 +31,18 @@ class AuthService {
   Future registerWithEmailAndPassword(
       String fullName, String email, String password) async {
     try {
+      // create user in firebase auth
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      User? user = result.user;
-
-      // Create a new document for the user with uid
-      await DatabaseService(uid: user!.uid)
-          .updateUserData(fullName, email, password);
-      return _userFromFirebaseUser(user);
+      if (result.user != null) {
+        User? user = result.user;
+        user!.updateDisplayName(fullName);
+        user.reload();
+        var usu = _userFromFirebaseUser(user);
+        // Add user to database
+        await DatabaseService().createUserDocument(user.uid, email, fullName);
+        return usu;
+      }
     } catch (e) {
       print(e.toString());
       return null;
@@ -51,22 +55,40 @@ class AuthService {
       await HelperFunctions.saveUserLoggedInSharedPreference(false);
       await HelperFunctions.saveUserEmailSharedPreference('');
       await HelperFunctions.saveUserNameSharedPreference('');
-
-      return await _auth.signOut().whenComplete(() async {
-        print("Logged out");
-        await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
-          print("Logged in: $value");
-        });
-        await HelperFunctions.getUserEmailSharedPreference().then((value) {
-          print("Email: $value");
-        });
-        await HelperFunctions.getUserNameSharedPreference().then((value) {
-          print("Full Name: $value");
-        });
-      });
+      // Sign out with firebase
+      return await _auth.signOut();
     } catch (e) {
       print(e.toString());
       return null;
+    }
+  }
+
+  // remove user
+  Future removeUser() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await DatabaseService().removeUserData(user.uid);
+        await user.delete();
+        return await _auth.signOut();
+      }
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<bool> getLoggedUser() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 }

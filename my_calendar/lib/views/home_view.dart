@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_calendar/main.dart';
+import 'package:my_calendar/services/auth_service.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 
@@ -23,7 +25,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
+  final AuthService _auth = AuthService();
   int _counter = 0;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -52,6 +54,18 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        // log out button on app bar to go back to login page
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              // log out
+              _auth.signOut();
+               Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => MyApp()));
+            },
+          )
+        ],
       ),
       body: TableCalendar(
         firstDay: kFirstDay,

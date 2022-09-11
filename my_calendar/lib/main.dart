@@ -34,14 +34,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   _getUserLoggedInStatus() async {
+    // Check if auth firebase user is logged in
+
     await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
       if (value != null) {
         setState(() {
-          _isLoggedIn = false;
+          _isLoggedIn = value;
         });
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,8 +52,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: _isLoggedIn ? const MyHomePage(title: 'Inicio')  : AuthenticatePage(),
-     
+      home:
+          _isLoggedIn ? const MyHomePage(title: 'Inicio') : AuthenticatePage(),
     );
   }
 }

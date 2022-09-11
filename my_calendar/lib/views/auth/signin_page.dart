@@ -32,36 +32,22 @@ class _SignInPageState extends State<SignInPage> {
     if (_formKey.currentState!.validate()) {
       print(email);
       print(password);
-      // setState(() {
-      //   _isLoading = false;
-      // });
+      setState(() {
+        _isLoading = true;
+      });
 
       await _auth
           .signInWithEmailAndPassword(email, password)
           .then((result) async {
         if (result != null) {
           print(result.uid);
-          QuerySnapshot userInfoSnapshot =
-              await DatabaseService(uid: result.uid).getUserData(email);
-          
+          QuerySnapshot userInfoSnapshot = await DatabaseService().getUserData(email);
+          var name = userInfoSnapshot.docs[0].get('fullName');
           await HelperFunctions.saveUserLoggedInSharedPreference(true);
           await HelperFunctions.saveUserEmailSharedPreference(email);
-          // await HelperFunctions.saveUserNameSharedPreference(
-          //     userInfoSnapshot.docs[0].data());
-
-          print("Signed In");
-          await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
-            print("Logged in: $value");
-          });
-          await HelperFunctions.getUserEmailSharedPreference().then((value) {
-            print("Email: $value");
-          });
-          // await HelperFunctions.getUserNameSharedPreference().then((value) {
-          //   print("Full Name: $value");
-          // });
-
-          // Navigator.of(context).pushReplacement(MaterialPageRoute(
-              // builder: (context) => const MyHomePage(title: 'My calendar')));
+          await HelperFunctions.saveUserNameSharedPreference(name);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => const MyHomePage(title: 'My calendar')));
         } else {
           setState(() {
             error = 'Error signing in!';

@@ -1,26 +1,42 @@
 class Event {
-  final int id;
-  final String title;
-  final String description;
-  final int idHost;
-  final DateTime startDate;
-  DateTime ? endDate;
+String ? _id;
+String _title;
+ String _description;
+String _idHost;
+ DateTime _startDate;
+DateTime ? _endDate;
 
-  Event(this.id, this.title, this.description, this.idHost, this.startDate);
+Event(this._title, this._description, this._idHost, this._startDate);
 
-  Event.fromJson(Map < String, dynamic > json): id = json['id'], title = json['name'], description = json['description'], idHost = json['idHost'],
-    startDate = json['startDate'], endDate = json['endDate'];
+Event.fromJson(Map < String, dynamic> json): _id = json['id'], _title = json['title'], _description = json['description'],
+  _idHost = json['idHost'],
+  _startDate = json['startDate'], _endDate = json['endDate'];
+  // getter and setters
+  String? get getId => _id;
+  String get getTitle => _title;
+  String get getDescription => _description;
+  String get getIdHost => _idHost;
+  DateTime get getStartDate => _startDate;
+  DateTime ? get getEndDate => _endDate;
 
-  
+  set id(String id) => this._id = id;
+  set title(String title) => this._title = title;
+  set description(String description) => this._description = description;
+  set idHost(String idHost) => this._idHost = idHost;
+  set startDate(DateTime startDate) => this._startDate = startDate;
+  set endDate(DateTime ? endDate) => this._endDate = endDate;
+
+
   Map<String, dynamic> toJson() => {
-       'id':id,
-        'title': title,
-        'description' : description,
-        'idHost' : idHost,
-        'startDate' : startDate,
-        'endDate' : endDate
-      };
+    'id':_id,
+    'title': _title,
+    'description' : _description,
+    'idHost' : _idHost,
+    'startDate' : _startDate,
+    'endDate' : _endDate
+    };
 
-       @override
-  String toString() => title;
-}
+
+    @override
+    String toString() => _title;
+    }

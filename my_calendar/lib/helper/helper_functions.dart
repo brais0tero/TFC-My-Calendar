@@ -1,43 +1,60 @@
+// ignore_for_file: unnecessary_null_comparison
+
+import 'package:my_calendar/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HelperFunctions{
-
+class HelperFunctions {
   static String sharedPreferenceUserLoggedInKey = "ISLOGGEDIN";
   static String sharedPreferenceUserNameKey = "USERNAMEKEY";
   static String sharedPreferenceUserEmailKey = "USEREMAILKEY";
 
   // saving data to sharedpreference
-  static Future<bool> saveUserLoggedInSharedPreference(bool isUserLoggedIn) async{
-
+  static Future<bool> saveUserLoggedInSharedPreference(
+      bool isUserLoggedIn) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.setBool(sharedPreferenceUserLoggedInKey, isUserLoggedIn);
+    return await preferences.setBool(
+        sharedPreferenceUserLoggedInKey, isUserLoggedIn);
   }
 
-  static Future<bool> saveUserNameSharedPreference(String userName) async{
+  static Future<bool> saveUserNameSharedPreference(String userName) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return await preferences.setString(sharedPreferenceUserNameKey, userName);
   }
 
-  static Future<bool> saveUserEmailSharedPreference(String userEmail) async{
+  static Future<bool> saveUserEmailSharedPreference(String userEmail) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return await preferences.setString(sharedPreferenceUserEmailKey, userEmail);
   }
 
-
   // fetching data from sharedpreference
-  static Future<bool?> getUserLoggedInSharedPreference() async{
+  static Future<bool> getUserLoggedInSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.getBool(sharedPreferenceUserLoggedInKey);
+    var boolValue = preferences.getBool(sharedPreferenceUserLoggedInKey);
+    // get auth user from auth service
+    final AuthService _auth = AuthService();
+    final Future<bool>  user = _auth.getLoggedUser();
+    if (boolValue == null) {
+      if (user != null) {
+        // check if user is a bool object
+        if (user is bool) {
+          return user;
+        } else {
+          return false;
+        }
+
+      }
+      return false;
+    }
+    return boolValue;
   }
 
-  static Future<String?> getUserNameSharedPreference() async{
+  static Future<String?> getUserNameSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return  preferences.getString(sharedPreferenceUserNameKey);
+    return preferences.getString(sharedPreferenceUserNameKey);
   }
 
-  static Future<String?> getUserEmailSharedPreference() async{
+  static Future<String?> getUserEmailSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(sharedPreferenceUserEmailKey);
   }
-
 }
