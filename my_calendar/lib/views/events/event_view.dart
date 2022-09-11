@@ -1,9 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:my_calendar/models/event.dart';
+import 'package:my_calendar/services/auth_service.dart';
+import 'package:my_calendar/services/database_service.dart';
 import 'package:my_calendar/utils/constanst.dart';
+import 'package:my_calendar/views/home_view.dart';
 
 // ignore: must_be_immutable
 class EventView extends StatefulWidget {
@@ -16,7 +18,7 @@ class EventView extends StatefulWidget {
 
   TextEditingController? eventControllerForTitle;
   TextEditingController? eventControllerForDescription;
-  final Event? event;
+  Event? event;
 
   @override
   State<EventView> createState() => _EventViewState();
@@ -99,33 +101,32 @@ class _EventViewState extends State<EventView> {
       try {
         widget.eventControllerForTitle?.text = title;
         widget.eventControllerForDescription?.text = description;
-
-        Navigator.of(context).pop();
+        if (widget.event != null) {
+          Event? event = widget.event;
+          DatabaseService.updateEvent(event!);
+          Navigator.of(context).pop();
+        }
       } catch (error) {
         nothingEnterOnUpdateEventMode(context);
       }
     } else {
       if (title != null && description != null) {
         // get user uid from firebase auth
-        final user = FirebaseAuth.instance.currentUser;
-        final uid = user!.uid;
+        AuthService _auth = AuthService();
+        final uid = _auth.getCurrentUserMail();
         // set startdate date time with startdate and starttime
         final startDateTime = DateTime(
             showDateAsDateTime(startDate).year,
             showDateAsDateTime(startDate).month,
             showDateAsDateTime(startDate).day,
             showTimeAsDateTime(startTime).hour,
-            showTimeAsDateTime(startTime).minute); 
-
-        // create a mew Event
-        var event = Event(
-          title,
-          description,
-          uid,
-          startDateTime
-        );
+            showTimeAsDateTime(startTime).minute);
+        // create a new Event
+        var event = Event(title, description, uid, startDateTime);
         // save event
-        
+        // Save event on the database
+        DatabaseService.createEvent(event);
+
         Navigator.of(context).pop();
       } else {
         emptyFieldsWarning(context);
@@ -135,17 +136,20 @@ class _EventViewState extends State<EventView> {
 
   /// Delete Selected Event
   dynamic deleteEvent() {
-    
+    if (widget.event != null) {
+      Event? event = widget.event;
+      DatabaseService.deleteEvent(event!);
+      Navigator.of(context).pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: const MyAppBar(),
+        backgroundColor: Colors.black,
+        appBar: const CreateBar(),
         body: SizedBox(
           width: double.infinity,
           height: double.infinity,
@@ -153,14 +157,14 @@ class _EventViewState extends State<EventView> {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   /// new / update Event Text
-                  _buildTopText(textTheme),
+                  _buildTopText(),
 
                   /// Middle Two TextFileds, Time And Date Selection Box
-                  _buildMiddleTextFieldsANDTimeAndDateSelection(
-                      context, textTheme),
+                  _buildMiddleTextFieldsANDTimeAndDateSelection(context),
 
                   /// All Bottom Buttons
                   _buildBottomButtons(context),
@@ -190,8 +194,7 @@ class _EventViewState extends State<EventView> {
                   width: 150,
                   height: 55,
                   decoration: BoxDecoration(
-                      border:
-                          Border.all( width: 2),
+                      border: Border.all(width: 2),
                       borderRadius: BorderRadius.circular(15)),
                   child: MaterialButton(
                     shape: RoundedRectangleBorder(
@@ -203,7 +206,7 @@ class _EventViewState extends State<EventView> {
                       deleteEvent();
                       Navigator.pop(context);
                     },
-                    color: Colors.white,
+                    color: Colors.grey[300],
                     child: Row(
                       children: const [
                         Icon(
@@ -212,9 +215,7 @@ class _EventViewState extends State<EventView> {
                         SizedBox(
                           width: 5,
                         ),
-                        Text(
-                        "Delete event"
-                        ),
+                        Text("Delete event"),
                       ],
                     ),
                   ),
@@ -227,15 +228,14 @@ class _EventViewState extends State<EventView> {
             ),
             minWidth: 150,
             height: 55,
+            color: Colors.greenAccent,
             onPressed: () {
               isEventAlreadyExistUpdateEvent();
             },
             child: Text(
-              isEventAlreadyExistBool()
-                  ? "Add Event"
-                  : "Update Event",
+              isEventAlreadyExistBool() ? "Add Event" : "Update Event",
               style: const TextStyle(
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
           ),
@@ -245,11 +245,9 @@ class _EventViewState extends State<EventView> {
   }
 
   /// Middle Two TextFileds And Time And Date Selection Box
-  SizedBox _buildMiddleTextFieldsANDTimeAndDateSelection(
-      BuildContext context, TextTheme textTheme) {
+  SizedBox _buildMiddleTextFieldsANDTimeAndDateSelection(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 535,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -267,8 +265,8 @@ class _EventViewState extends State<EventView> {
               title: TextFormField(
                 controller: widget.eventControllerForTitle,
                 maxLines: 6,
-                cursorHeight: 60,
-                style: const TextStyle(color: Colors.black),
+                cursorHeight: 20,
+                style: const TextStyle(color: Colors.white, fontSize: 20),
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey.shade300),
@@ -299,9 +297,10 @@ class _EventViewState extends State<EventView> {
             child: ListTile(
               title: TextFormField(
                 controller: widget.eventControllerForDescription,
-                style: const TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.bookmark_border, color: Colors.grey),
+                  prefixIcon:
+                      const Icon(Icons.article_outlined, color: Colors.white),
                   border: InputBorder.none,
                   counter: Container(),
                   hintText: "Add description",
@@ -325,17 +324,15 @@ class _EventViewState extends State<EventView> {
                   onChanged: (_) {}, onConfirm: (selectedTime) {
                 setState(() {
                   if (widget.event?.getStartDate == null) {
-                  startTime = selectedTime;
+                    startTime = selectedTime;
                   } else {
-                    // widget.event!.startDate add selevtedTime
-                      widget.event!.startDate = DateTime(
+                    widget.event!.startDate = DateTime(
                       widget.event!.getStartDate!.year,
                       widget.event!.getStartDate!.month,
                       widget.event!.getStartDate!.day,
                       selectedTime.hour,
                       selectedTime.minute,
                     );
-                    // widget.event!.startDate. selectedTime;
                   }
                 });
 
@@ -347,16 +344,16 @@ class _EventViewState extends State<EventView> {
               width: double.infinity,
               height: 55,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.black,
                 border: Border.all(color: Colors.grey.shade300, width: 1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child:
-                        Text("Set start time", style: textTheme.headline5),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text("Set start time",
+                        style: TextStyle(fontSize: 20, color: Colors.white)),
                   ),
                   Expanded(child: Container()),
                   Container(
@@ -367,9 +364,10 @@ class _EventViewState extends State<EventView> {
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.grey.shade100),
                     child: Center(
-                      child: Text(
-                        showTime(startTime),
-                      ),
+                      child: Text(showTime(startTime),
+                          style: TextStyle(
+                            color: Colors.black,
+                          )),
                     ),
                   )
                 ],
@@ -400,7 +398,7 @@ class _EventViewState extends State<EventView> {
               width: double.infinity,
               height: 55,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.black,
                 border: Border.all(color: Colors.grey.shade300, width: 1),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -408,8 +406,9 @@ class _EventViewState extends State<EventView> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child:
-                        Text("Start date", style: textTheme.headline5),
+                    child: Text("Set start Date",
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.white)),
                   ),
                   Expanded(child: Container()),
                   Container(
@@ -422,20 +421,23 @@ class _EventViewState extends State<EventView> {
                     child: Center(
                       child: Text(
                         showDate(startDate),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   )
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
   /// new / update Event Text
-  SizedBox _buildTopText(TextTheme textTheme) {
+  SizedBox _buildTopText() {
     return SizedBox(
       width: double.infinity,
       height: 100,
@@ -451,15 +453,17 @@ class _EventViewState extends State<EventView> {
           ),
           RichText(
             text: TextSpan(
-                text: isEventAlreadyExistBool()
-                    ? "Add New "
-                    : "Update ",
-                style: textTheme.headline6,
+                text: isEventAlreadyExistBool() ? "Add New " : "Update ",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                ),
                 children: const [
                   TextSpan(
                     text: "Event",
                     style: TextStyle(
-                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
                     ),
                   )
                 ]),
@@ -477,8 +481,8 @@ class _EventViewState extends State<EventView> {
 }
 
 /// AppBar
-class MyAppBar extends StatelessWidget with PreferredSizeWidget {
-  const MyAppBar({
+class CreateBar extends StatelessWidget with PreferredSizeWidget {
+  const CreateBar({
     Key? key,
   }) : super(key: key);
 
@@ -486,9 +490,8 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 150,
       child: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -501,7 +504,8 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
                 },
                 child: const Icon(
                   Icons.arrow_back_ios_new_rounded,
-                  size: 50,
+                  size: 25,
+                  color: Colors.white,
                 ),
               ),
             ),

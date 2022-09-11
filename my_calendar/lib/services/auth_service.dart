@@ -91,4 +91,8 @@ class AuthService {
       return false;
     }
   }
+
+  getCurrentUserMail() {
+    return _auth.currentUser!.email;
+  }
 }

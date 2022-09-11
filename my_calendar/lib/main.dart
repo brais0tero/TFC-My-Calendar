@@ -50,8 +50,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'My calendar',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+      theme:  ThemeData.dark(),
       home:
           _isLoggedIn ? const MyHomePage(title: 'Inicio') : AuthenticatePage(),
     );

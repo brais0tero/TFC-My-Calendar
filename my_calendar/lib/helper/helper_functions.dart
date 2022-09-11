@@ -7,6 +7,7 @@ class HelperFunctions {
   static String sharedPreferenceUserLoggedInKey = "ISLOGGEDIN";
   static String sharedPreferenceUserNameKey = "USERNAMEKEY";
   static String sharedPreferenceUserEmailKey = "USEREMAILKEY";
+   static String sharedPreferenceUserPhotoKey = "USEREPHOTOKEY";
 
   // saving data to sharedpreference
   static Future<bool> saveUserLoggedInSharedPreference(
@@ -25,6 +26,10 @@ class HelperFunctions {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return await preferences.setString(sharedPreferenceUserEmailKey, userEmail);
   }
+    static Future<bool> saveUserPhotoSharedPreference(String userPhoto) async {
+     SharedPreferences preferences = await SharedPreferences.getInstance();
+    return await preferences.setString(sharedPreferenceUserPhotoKey, userPhoto);
+  } 
 
   // fetching data from sharedpreference
   static Future<bool> getUserLoggedInSharedPreference() async {
@@ -57,4 +62,9 @@ class HelperFunctions {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(sharedPreferenceUserEmailKey);
   }
+
+  static Future<String?> getUserPhotoSharedPreference() async {
+     SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(sharedPreferenceUserPhotoKey);
+  } 
 }

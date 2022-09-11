@@ -43,9 +43,11 @@ class _SignInPageState extends State<SignInPage> {
           print(result.uid);
           QuerySnapshot userInfoSnapshot = await DatabaseService().getUserData(email);
           var name = userInfoSnapshot.docs[0].get('fullName');
+          var photo = userInfoSnapshot.docs[0].get('profilePic');
           await HelperFunctions.saveUserLoggedInSharedPreference(true);
           await HelperFunctions.saveUserEmailSharedPreference(email);
           await HelperFunctions.saveUserNameSharedPreference(name);
+           await HelperFunctions.saveUserPhotoSharedPreference(photo);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => const MyHomePage(title: 'My calendar')));
         } else {
